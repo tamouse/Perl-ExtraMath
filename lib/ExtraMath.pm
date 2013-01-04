@@ -16,19 +16,70 @@ our @ISA = qw(Exporter);
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
-	
+min
+max
+sum
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
-	
+min
+max
+sum	
 );
 
 our $VERSION = '0.01';
 
 
-# Preloaded methods go here.
+sub min {
+    unless (check_numeric(@_)) {
+	warn "min only works on numeric arguments";
+	return 0;
+    }
+    my ($start, $compare);
+    $start = shift;
+    while(@_) {
+	$compare = shift;
+	$start = $compare if $compare < $start;
+    }
+    return $start;
+}
+
+sub max {
+    unless (check_numeric(@_)) {
+	warn "max only works on numeric arguments";
+	return 0;
+    }
+    my ($start, $compare);
+    $start = shift;
+    while(@_) {
+	$compare = shift;
+	$start = $compare if $compare > $start;
+    }
+    return $start;
+}
+
+sub sum {
+    unless (check_numeric(@_)) {
+	warn "sum requires numeric arguments";
+	return 0;
+    }
+    my $start;
+    $start = shift;
+    while(@_) {
+	$start += shift;
+    }
+    return $start;
+}
+
+sub check_numeric {
+    for (my $i = 0; $i < $#_; $i++) {
+	return 0 unless $_[$i] =~ /^\d+$/;
+    }
+    return 1;
+}
+
 
 1;
 __END__
@@ -36,41 +87,30 @@ __END__
 
 =head1 NAME
 
-ExtraMath - Perl extension for blah blah blah
+ExtraMath - Perl extension to provide some extra math functions
 
 =head1 SYNOPSIS
 
   use ExtraMath;
-  blah blah blah
+  $a = min(1,2,3,4,5); # 1
+  $b = max(1,2,3,4,5); # 5
+  $c = sum(1,2,3,4); # 10
 
 =head1 DESCRIPTION
 
-Stub documentation for ExtraMath, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
+Provide some rudimentary extra numeric methods.
 
 =head2 EXPORT
 
 None by default.
 
-
-
 =head1 SEE ALSO
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
 
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
 
 =head1 AUTHOR
 
-Tamara Temple, E<lt>tamara@E<gt>
+Tamara Temple, E<lt>tamouse@gmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
